@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic AI — Guest Lecture</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css" id="theme">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+<style>
+  :root {
+    --r-background-color: #1a1a2e;
+    --r-main-color: #e0e0e0;
+    --r-heading-color: #ffffff;
+    --r-link-color: #4fc3f7;
+  }
+  .reveal { font-size: 32px; }
+  .reveal h1 { font-size: 2.2em; color: #4fc3f7; }
+  .reveal h2 { font-size: 1.5em; color: #4fc3f7; }
+  .reveal h3 { font-size: 1.1em; color: #81d4fa; }
+  .reveal li { margin-bottom: 0.4em; }
+  .reveal strong { color: #fff; }
+  .reveal code { color: #80cbc4; }
+  .reveal pre code { font-size: 0.75em; line-height: 1.4; }
+  .reveal .slide-number { font-size: 14px; }
+  .section-title { color: #4fc3f7 !important; font-size: 2.5em !important; }
+  .subtitle { color: #81d4fa; font-size: 0.7em; margin-top: 0.5em; }
+  .react-loop {
+    display: flex; justify-content: center; align-items: center;
+    gap: 0.5em; margin: 1em 0; font-size: 1.2em;
+  }
+  .react-loop .step {
+    background: #16213e; padding: 0.5em 1em; border-radius: 12px;
+    border: 2px solid #4fc3f7;
+  }
+  .react-loop .arrow { color: #4fc3f7; font-size: 1.5em; }
+  .tool-flow {
+    background: #16213e; border-radius: 12px; padding: 1em;
+    margin: 0.8em 0; text-align: left; font-size: 0.85em;
+    border-left: 4px solid #4fc3f7;
+  }
+  .tool-flow .label { color: #4fc3f7; font-weight: bold; }
+  .pattern-box {
+    background: #16213e; border-radius: 12px; padding: 0.8em;
+    margin: 0.5em 0; border-left: 4px solid #81d4fa;
+  }
+  .two-col { display: flex; gap: 1.5em; }
+  .two-col > div { flex: 1; }
+  .highlight-box {
+    background: #0d47a1; border-radius: 8px; padding: 0.6em 1em;
+    margin: 0.5em 0; font-size: 0.9em;
+  }
+  .dimmed { color: #888; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ============================================================ -->
+<!-- TITLE SLIDE -->
+<!-- ============================================================ -->
+<section>
+  <h1>Agentic AI</h1>
+  <p class="subtitle">From LLMs to Autonomous Agents</p>
+  <br>
+  <p style="font-size:0.6em; color:#888;">
+    Guest Lecture &mdash; [Your Name]<br>
+    Principal Engineer, Intuit<br>
+    <br>
+    30 min theory + 2h15m hands-on workshop
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- BLOCK 1: FROM LLMs TO AGENTS -->
+<!-- ============================================================ -->
+<section>
+  <h1 class="section-title">From LLMs to Agents</h1>
+  <p class="dimmed">Block 1 &mdash; 10 min</p>
+</section>
+
+<!-- Slide: What makes something agentic? -->
+<section>
+  <h2>What Makes Something "Agentic"?</h2>
+  <p style="margin-bottom:0.8em;">It's a <strong>spectrum</strong>, not a binary.</p>
+  <div class="two-col">
+    <div>
+      <h3>Five key properties</h3>
+      <ol style="font-size:0.85em;">
+        <li>Goal-directed behavior</li>
+        <li>Tool use</li>
+        <li>Planning &amp; reasoning</li>
+        <li>Memory</li>
+        <li>Environment interaction</li>
+      </ol>
+    </div>
+    <div>
+      <div class="highlight-box" style="margin-top:1.5em;">
+        ChatGPT answering a question = <strong>not agentic</strong>
+      </div>
+      <div class="highlight-box" style="background:#1b5e20;">
+        AI that researches, drafts, revises, and submits a PR = <strong>agentic</strong>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">Start by asking "Is ChatGPT an agent?" — use responses to motivate the spectrum.</aside>
+</section>
+
+<!-- Slide: The ReAct Loop -->
+<section>
+  <h2>The ReAct Loop: Reason + Act</h2>
+  <div class="react-loop">
+    <div class="step">Observe</div>
+    <div class="arrow">&rarr;</div>
+    <div class="step">Think</div>
+    <div class="arrow">&rarr;</div>
+    <div class="step">Act</div>
+    <div class="arrow">&rarr;</div>
+    <div class="step">Observe</div>
+    <div class="arrow">&circlearrowleft;</div>
+  </div>
+  <ul style="font-size:0.85em;">
+    <li><strong>Simple chain</strong>: fixed sequence &mdash; input &rarr; LLM &rarr; output</li>
+    <li><strong>ReAct</strong>: dynamic loop &mdash; the model decides what to do next</li>
+    <li>The loop is <strong>non-deterministic</strong> &mdash; same input can produce different paths</li>
+    <li>This is THE fundamental pattern behind every agent framework</li>
+  </ul>
+  <aside class="notes">Stress the non-determinism. This is what makes agents fundamentally different from pipelines.</aside>
+</section>
+
+<!-- Slide: Tool Use -->
+<section>
+  <h2>Tool Use / Function Calling</h2>
+  <p style="font-size:0.85em;">The LLM never "runs" code &mdash; it <strong>requests</strong> a function call, the runtime executes it.</p>
+  <div class="tool-flow">
+    <div class="label">User</div>
+    "Do I need an umbrella in Amsterdam today?"
+  </div>
+  <div class="tool-flow">
+    <div class="label">LLM emits</div>
+    <code>{"function": "get_weather", "args": {"city": "Amsterdam"}}</code>
+  </div>
+  <div class="tool-flow">
+    <div class="label">Runtime returns</div>
+    <code>{"temp": 14, "rain_prob": 0.85}</code>
+  </div>
+  <div class="tool-flow">
+    <div class="label">LLM responds</div>
+    "Yes &mdash; 85% chance of rain. Bring an umbrella."
+  </div>
+  <aside class="notes">Tool definitions are part of the system prompt. The model "learns" what tools are available at inference time.</aside>
+</section>
+
+<!-- Slide: Why not traditional? -->
+<section>
+  <h2>Why Not Just Write a Traditional Program?</h2>
+  <div class="two-col" style="font-size:0.85em;">
+    <div>
+      <h3 style="color:#ef5350;">Traditional Program</h3>
+      <ul>
+        <li>Every path must be pre-programmed</li>
+        <li>Combinatorial explosion</li>
+        <li>Brittle when inputs are ambiguous</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color:#66bb6a;">Agent</h3>
+      <ul>
+        <li>Handles ambiguity with judgment</li>
+        <li>Adapts based on intermediate results</li>
+        <li>Composes tools creatively</li>
+      </ul>
+    </div>
+  </div>
+  <div class="highlight-box" style="margin-top:1em; font-size:0.85em;">
+    <strong>Rule of thumb:</strong> clear, fixed procedure &rarr; write a program. Requires judgment &amp; adaptation &rarr; consider an agent.
+  </div>
+  <p style="font-size:0.75em; color:#888; margin-top:0.8em;">
+    Trade-off: agents are less predictable, harder to debug, more expensive to run.
+  </p>
+  <aside class="notes">"Sort a list" = write a program. "Investigate why CI broke" = agent territory. Be honest about trade-offs.</aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- BLOCK 2: MULTI-AGENT PATTERNS -->
+<!-- ============================================================ -->
+<section>
+  <h1 class="section-title">Multi-Agent Patterns</h1>
+  <p class="dimmed">Block 2 &mdash; 10 min</p>
+</section>
+
+<!-- Slide: Why Multi-Agent? -->
+<section>
+  <h2>Why Multi-Agent?</h2>
+  <div class="two-col" style="font-size:0.85em;">
+    <div>
+      <h3 style="color:#ef5350;">Single agent limits</h3>
+      <ul>
+        <li>Context window bloat</li>
+        <li>Tool overload (50+ tools = confusion)</li>
+        <li>Conflicting instructions</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color:#66bb6a;">Multi-agent wins</h3>
+      <ul>
+        <li><strong>Specialization</strong> &mdash; focused roles</li>
+        <li><strong>Modularity</strong> &mdash; develop independently</li>
+        <li><strong>Parallel execution</strong></li>
+      </ul>
+    </div>
+  </div>
+  <div class="highlight-box" style="margin-top:1em; font-size:0.9em;">
+    Think: <strong>software team</strong> vs. one developer doing everything.
+  </div>
+  <aside class="notes">Relate to separation of concerns, single responsibility principle.</aside>
+</section>
+
+<!-- Slide: Handoffs -->
+<section>
+  <h2>Pattern 1: Handoffs / Delegation</h2>
+  <div class="react-loop" style="margin:1.2em 0;">
+    <div class="step">Agent A</div>
+    <div class="arrow">&rarr;</div>
+    <div class="step" style="border-color:#81d4fa;">handoff</div>
+    <div class="arrow">&rarr;</div>
+    <div class="step">Agent B</div>
+  </div>
+  <div class="pattern-box" style="font-size:0.85em;">
+    <strong>Example &mdash; Customer service routing:</strong><br>
+    Triage Agent receives message &rarr; classifies intent (billing / technical / returns) &rarr; hands off to specialist with full history
+  </div>
+  <p style="font-size:0.8em; margin-top:0.8em;">
+    Key question: who decides when to hand off?<br>
+    <span class="dimmed">The agent itself vs. explicit rules</span>
+  </p>
+  <aside class="notes">Simplest multi-agent pattern. The handoff is itself a tool call.</aside>
+</section>
+
+<!-- Slide: Supervisor -->
+<section>
+  <h2>Pattern 2: Supervisor / Orchestrator</h2>
+  <div style="text-align:center; margin:1em 0; font-size:0.9em;">
+    <div class="step" style="display:inline-block; background:#16213e; padding:0.5em 1.5em; border-radius:12px; border:2px solid #4fc3f7;">
+      Supervisor
+    </div>
+    <div style="margin:0.5em 0; color:#4fc3f7;">&darr; &nbsp; &darr; &nbsp; &darr;</div>
+    <div style="display:flex; justify-content:center; gap:1em;">
+      <div class="step" style="background:#16213e; padding:0.4em 1em; border-radius:8px; border:2px solid #81d4fa; font-size:0.85em;">Search</div>
+      <div class="step" style="background:#16213e; padding:0.4em 1em; border-radius:8px; border:2px solid #81d4fa; font-size:0.85em;">Analyst</div>
+      <div class="step" style="background:#16213e; padding:0.4em 1em; border-radius:8px; border:2px solid #81d4fa; font-size:0.85em;">Writer</div>
+    </div>
+  </div>
+  <ul style="font-size:0.85em;">
+    <li>Boss receives task, breaks into subtasks, delegates</li>
+    <li>Collects results, may re-delegate if quality is insufficient</li>
+    <li>Supports fan-out, iteration, quality control</li>
+  </ul>
+  <aside class="notes">Draw hub-and-spoke diagram. LangGraph supports this natively.</aside>
+</section>
+
+<!-- Slide: Real-world examples -->
+<section>
+  <h2>Real-World Agentic Systems</h2>
+  <div class="two-col" style="font-size:0.8em;">
+    <div>
+      <h3 style="color:#81d4fa;">Developer tools</h3>
+      <ul>
+        <li><strong>GitHub Copilot Workspace</strong> &mdash; reads issue, edits files, runs tests</li>
+        <li><strong>Devin / OpenHands</strong> &mdash; autonomous SE agents</li>
+        <li><strong>Claude Code</strong> &mdash; CLI agent that reads, edits, runs, iterates</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color:#81d4fa;">Intuit (where I work)</h3>
+      <ul>
+        <li><strong>Intuit Assist</strong> &mdash; AI financial assistant across TurboTax, QuickBooks, Mailchimp</li>
+        <li><strong>AI Agent teams</strong> &mdash; Accounting Agent, Payroll Agent, Sales Tax Agent, Finance Agent work in the background</li>
+        <li><strong>GenOS</strong> &mdash; internal platform for building agentic experiences at scale</li>
+      </ul>
+    </div>
+  </div>
+  <div class="highlight-box" style="margin-top:0.8em; font-size:0.85em;">
+    Common thread: <strong>ReAct loops + tool access + human-in-the-loop</strong><br>
+    <span class="dimmed">Today we focus on single-agent &mdash; this is where core reasoning happens.</span>
+  </div>
+  <aside class="notes">Intuit's agents save businesses ~12 hours/month. Payroll Agent texts employees for time data, Accounting Agent compares PDF statements to books and flags differences. These are multi-agent systems in production at massive scale. Anthropic partnership announced for custom agents in 2026.</aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- BLOCK 3: LANGGRAPH + WORKSHOP PREVIEW -->
+<!-- ============================================================ -->
+<section>
+  <h1 class="section-title">LangGraph + Workshop</h1>
+  <p class="dimmed">Block 3 &mdash; 10 min</p>
+</section>
+
+<!-- Slide: LangGraph concepts -->
+<section>
+  <h2>LangGraph Core Concepts</h2>
+  <ul style="font-size:0.85em;">
+    <li><strong>Graph</strong> &mdash; the overall workflow definition</li>
+    <li><strong>Nodes</strong> &mdash; individual steps (LLM call, tool execution, logic)</li>
+    <li><strong>Edges</strong> &mdash; connections between nodes (fixed or conditional)</li>
+    <li><strong>State</strong> &mdash; shared typed dictionary flowing through the graph</li>
+  </ul>
+  <div class="highlight-box" style="margin-top:1em; font-size:0.9em;">
+    Why graphs? <strong>Explicit control flow</strong> &mdash; easier to debug and visualize than free-form loops.
+  </div>
+  <aside class="notes">Relate to FSMs or dataflow graphs from coursework.</aside>
+</section>
+
+<!-- Slide: create_react_agent -->
+<section>
+  <h2><code>create_react_agent</code></h2>
+  <h3>The 5-line agent</h3>
+  <pre><code class="language-python">from langgraph.prebuilt import create_react_agent
+
+tools = [search_tool, calculator_tool]
+agent = create_react_agent(model, tools)
+result = agent.invoke({"messages": [("user", "...")]})</code></pre>
+  <ul style="font-size:0.85em; margin-top:1em;">
+    <li>Under the hood: builds the Observe-Think-Act graph automatically</li>
+    <li>Good starting point &mdash; customize when you need more control</li>
+    <li>This is what we start with in the workshop</li>
+  </ul>
+  <aside class="notes">Demystify: "an agent is just a graph with an LLM node and a tool node in a loop."</aside>
+</section>
+
+<!-- Slide: Key features -->
+<section>
+  <h2>Key Features We'll Use</h2>
+  <ul>
+    <li><strong>Tools</strong> &mdash; custom Python functions (<code>@tool</code>)</li>
+    <li><strong>Memory</strong> &mdash; persist state across conversation turns</li>
+    <li><strong>Human-in-the-loop</strong> &mdash; agent pauses for user confirmation</li>
+    <li><strong>Streaming</strong> &mdash; watch the agent think in real time</li>
+    <li><strong>Chainlit UI</strong> &mdash; chat interface in the browser</li>
+  </ul>
+  <aside class="notes">List quickly. Each will be introduced in the hands-on portion.</aside>
+</section>
+
+<!-- Slide: Workshop Preview -->
+<section>
+  <h2>Workshop: Personal Finance Agent</h2>
+  <p style="font-size:0.9em;">A conversational agent that investigates your spending.</p>
+  <ol style="font-size:0.85em;">
+    <li><strong>Phase 1:</strong> Terminal agent + 2 tools <span class="dimmed">(30 min)</span></li>
+    <li><strong>Phase 2:</strong> 5 tools, adaptive investigation <span class="dimmed">(35 min)</span></li>
+    <li><strong>Phase 3:</strong> Chat UI + memory + human-in-the-loop <span class="dimmed">(30 min)</span></li>
+    <li><strong>Bonus:</strong> Split into multi-agent system</li>
+  </ol>
+  <div class="highlight-box" style="margin-top:1em;">
+    <strong>Why it's agentic:</strong> "Why am I broke?" takes a completely different investigation path than "How much did I spend on food?" &mdash; the agent decides.
+  </div>
+  <br>
+  <h2 style="color:#66bb6a;">Let's build it.</h2>
+  <aside class="notes">End with energy. Transition: "Open your laptops, let's get started."</aside>
+</section>
+
+</div><!-- .slides -->
+</div><!-- .reveal -->
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script>
+Reveal.initialize({
+  hash: true,
+  slideNumber: true,
+  plugins: [RevealNotes, RevealHighlight],
+  transition: 'slide',
+  backgroundTransition: 'fade',
+});
+</script>
+</body>
+</html>
